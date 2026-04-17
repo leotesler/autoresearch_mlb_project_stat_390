@@ -6,6 +6,7 @@ library(here)
 library(httr)
 library(rvest)
 library(jsonlite)
+library(baseballr)
 
 # load MiLB data ----
 load(here("clean_data/milb_full.rds"))
@@ -35,8 +36,11 @@ mlb_clean <- fg_data |>
             tot_games = sum(g),
             tot_war = sum(war),
             median_war = median(war),
+            season_min = min(season_min),
+            season_max = max(season_max),
             .groups = "drop") |> 
-  mutate(war_162 = (tot_war/tot_games)*162)
+  mutate(war_162 = (tot_war/tot_games)*162) |> 
+  filter(season_min >= 2015)
 
 # join data ----
 mlb_full <- milb_full |> 
@@ -48,7 +52,7 @@ mlb_full <- milb_full |>
   mutate(across(where(is.numeric), ~replace_na(.x, 0)),
          milb_pa = pa_aaa+pa_aa+pa_ha+pa_la+pa_r) |> 
   filter(milb_pa >= 10) |> 
-  select(!milb_pa)
+  select(!c("milb_pa", "season_min", "season_max"))
 
 # save data ----
 dir.create("clean_data")

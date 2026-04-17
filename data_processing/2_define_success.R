@@ -30,14 +30,19 @@ mlb_full |>
   ggplot(aes(x = median_war)) +
   geom_histogram()
 
+# Experiment with success thresholds ----
 mlb_full |> 
-  filter(war_162 >= 2) |> 
-  select(name, war_162) |> 
+  filter((n_seasons >= 3 & war_162 > 2) | (n_seasons >= 5 & war_162 > 1)) |> 
+  select(name, war_162, median_war, n_seasons) |> 
   arrange(desc(war_162)) |> 
   print(n = Inf)
 
-mlb_full |> 
-  filter(median_war >= 2) |> 
-  select(name, war_162) |> 
-  arrange(desc(war_162)) |> 
-  print(n = Inf)
+# Add success ----
+mlb_full <- mlb_full |> 
+  mutate(success = if_else(
+    (n_seasons >= 3 & war_162 > 2) | (n_seasons >= 5 & war_162 > 1),
+    "Yes", "No"
+  ))
+
+# save results ----
+save(mlb_full, file = "clean_data/mlb_full.rds")
