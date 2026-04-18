@@ -34,7 +34,7 @@ mlb_clean <- mlb_full |>
   mutate(across(starts_with("min_age"), ~as.numeric(.x)),
          across(where(is.numeric), ~replace_na(.x, 0)),
          success = factor(success)) |> 
-  select(!c("n_seasons", "tot_games", "tot_war", "median_war", "war_162"))
+  select(!c("n_seasons", "tot_games", "tot_war", "avg_war", "median_war", "war_162"))
 
 mlb_clean |> 
   skimr::skim()

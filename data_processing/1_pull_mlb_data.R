@@ -34,6 +34,7 @@ mlb_clean <- fg_data |>
   group_by(x_mlbamid, player_name) |> 
   summarize(n_seasons = n(),
             tot_games = sum(g),
+            avg_war = mean(war, na.rm = TRUE),
             tot_war = sum(war),
             median_war = median(war),
             season_min = min(season_min),

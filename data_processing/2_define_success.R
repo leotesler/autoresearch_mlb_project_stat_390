@@ -32,7 +32,7 @@ mlb_full |>
 
 # Experiment with success thresholds ----
 mlb_full |> 
-  filter((n_seasons >= 3 & war_162 > 2) | (n_seasons >= 5 & war_162 > 1)) |> 
+  filter(avg_war >= 1 | (war_162 > 1.5 & n_seasons >= 5)) |> 
   select(name, war_162, median_war, n_seasons) |> 
   arrange(desc(war_162)) |> 
   print(n = Inf)
@@ -40,7 +40,7 @@ mlb_full |>
 # Add success ----
 mlb_full <- mlb_full |> 
   mutate(success = if_else(
-    (n_seasons >= 3 & war_162 > 2) | (n_seasons >= 5 & war_162 > 1),
+    (avg_war >= 1 | (war_162 > 1.5 & n_seasons >= 5)),
     "Yes", "No"
   ))
 
