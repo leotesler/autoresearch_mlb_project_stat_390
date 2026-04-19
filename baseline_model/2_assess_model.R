@@ -46,7 +46,8 @@ dir.create("images")
 
 baseline_model |> 
   tidy() |> 
-  filter(estimate != 0) |> 
+  filter(estimate != 0) |>
+  slice_head(n = 10) |> 
   kable("html") |> 
   save_kable(file = "images/coef_table.png")
 
