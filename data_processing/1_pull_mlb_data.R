@@ -50,8 +50,9 @@ mlb_full <- milb_full |>
     by = join_by(x_mlbamid)
   ) |> 
   select(!player_name) |> 
-  mutate(across(where(is.numeric), ~replace_na(.x, 0)),
-         milb_pa = pa_aaa+pa_aa+pa_ha+pa_la+pa_r) |> 
+  mutate(across(starts_with("pa"), ~replace_na(.x, 0)),
+         milb_pa = pa_aaa+pa_aa+pa_ha+pa_la+pa_r,
+         across(starts_with("pa"), ~if_else(.x == 0, NA, .x))) |> 
   filter(milb_pa >= 10) |> 
   select(!c("milb_pa", "season_min", "season_max"))
 

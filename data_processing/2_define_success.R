@@ -39,10 +39,13 @@ mlb_full |>
 
 # Add success ----
 mlb_full <- mlb_full |> 
-  mutate(success = if_else(
-    (avg_war >= 1 | (war_162 > 1.5 & n_seasons >= 5)),
-    "Yes", "No"
-  ))
+  mutate(
+    across(c("avg_war", "war_162", "n_seasons"), ~if_else(is.na(.x), 0, .x)),
+    success = if_else(
+      (avg_war >= 1 | (war_162 > 1.5 & n_seasons >= 5)),
+      "Yes", "No"
+    )
+  )
 
 # save results ----
 save(mlb_full, file = "clean_data/mlb_full.rds")

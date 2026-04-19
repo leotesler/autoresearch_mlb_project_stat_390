@@ -32,12 +32,8 @@ mlb_clean <- mlb_full |>
   separate(age_r, into = c("min_age_r", "max_age_r"), sep = "-") |> 
   select(!starts_with("max_age")) |> 
   mutate(across(starts_with("min_age"), ~as.numeric(.x)),
-         across(where(is.numeric), ~replace_na(.x, 0)),
-         success = factor(success)) |> 
+         success = factor(success, levels = c("No", "Yes"))) |> 
   select(!c("n_seasons", "tot_games", "tot_war", "avg_war", "median_war", "war_162"))
-
-mlb_clean |> 
-  skimr::skim()
 
 # train-test split ----
 mlb_split <- mlb_clean |> 
