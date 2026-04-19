@@ -4,6 +4,8 @@
 library(tidyverse)
 library(tidymodels)
 library(here)
+library(themis)
+library(kableExtra)
 
 # load data and tuning results ----
 load(here("baseline_model/data/mlb_train.rds"))
@@ -38,6 +40,15 @@ mlb_test |>
   bind_cols(predict(baseline_model, mlb_test, type = "prob")) |> 
   select(.pred_Yes) |> 
   print(n = Inf)
+
+# get model coefficients ----
+dir.create("images")
+
+baseline_model |> 
+  tidy() |> 
+  filter(estimate != 0) |> 
+  kable("html") |> 
+  save_kable(file = "images/coef_table.png")
 
 # save results ----
 save(baseline_model, file = "baseline_model/results/baseline_model.rda")
