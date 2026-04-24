@@ -5,6 +5,7 @@ library(tidyverse)
 library(tidymodels)
 library(here)
 library(doMC)
+library(themis)
 
 # load training data and folds ----
 load(here("baseline_model/data/mlb_train.rds"))
@@ -31,7 +32,7 @@ evaluate_model <- function(workflow) {
 # log result function ----
 log_result <- function(description, j) {
   row <- tibble(
-    iteration = nrow(read.csv("results.csv")) + 1,
+    iteration = if (file.exists("autoresearch/results.csv")) nrow(read.csv("autoresearch/results.csv")) + 1 else 1,
     description = description,
     j_index = round(j, 6),
     timestamp = as.character(Sys.time())
@@ -39,10 +40,10 @@ log_result <- function(description, j) {
   
   write.table(
     row,
-    file = "results.csv",
+    file = "autoresearch/results.csv",
     sep = ",",
     append = TRUE,
     row.names = FALSE,
-    col.names = !file.exists("results.csv")
+    col.names = !file.exists("autoresearch/results.csv")
   )
 }
