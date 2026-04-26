@@ -55,11 +55,11 @@ build_recipe <- function(training_data) {
     step_impute_median(all_predictors()) |> 
     step_normalize(all_numeric_predictors()) |> 
     step_zv(all_predictors()) |> 
-    step_smote(success)
+    step_downsample(success)
 }
 
 build_model_spec <- function() {
-  logistic_reg(penalty = tune(), mixture = 1) |> 
+  logistic_reg(penalty = penalty_value, mixture = 1) |> 
     set_engine("glmnet") |> 
     set_mode("classification")
 }
