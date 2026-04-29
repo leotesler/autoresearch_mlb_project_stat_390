@@ -52,10 +52,10 @@ build_recipe <- function(training_data) {
       aa_aaa_ops_delta = ops_aaa - ops_aa
     ) |> 
     step_indicate_na(all_predictors()) |> 
-    step_impute_median(all_predictors()) |> 
+    step_impute_median(all_predictors()) |>
     step_normalize(all_numeric_predictors()) |> 
     step_zv(all_predictors()) |> 
-    step_smote(success)
+    step_downsample(success)
 }
 
 build_model_spec <- function() {

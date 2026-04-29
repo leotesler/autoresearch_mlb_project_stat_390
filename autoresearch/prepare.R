@@ -20,8 +20,8 @@ evaluate_model <- function(workflow) {
     workflow,
     mlb_folds,
     grid = grid_regular(extract_parameter_set_dials(workflow), levels = 10),
-    metrics = metric_set(j_index, roc_auc, accuracy),
-    control = control_resamples(save_pred = FALSE, save_workflow = TRUE)
+    metrics = metric_set(j_index, accuracy, roc_auc),
+    control = control_grid(save_pred = FALSE, save_workflow = TRUE)
   )
   
   results |> 
