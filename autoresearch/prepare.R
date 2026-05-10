@@ -32,10 +32,11 @@ evaluate_model <- function(workflow) {
 }
 
 # log result function ----
-log_result <- function(description, j) {
+log_result <- function(description, j, features) {
   row <- tibble(
     iteration = if (file.exists("autoresearch/results.csv")) nrow(read.csv("autoresearch/results.csv")) + 1 else 1,
     description = description,
+    features = paste(features, collapse = "; "),
     j_index = round(j, 6),
     timestamp = as.character(Sys.time())
   )

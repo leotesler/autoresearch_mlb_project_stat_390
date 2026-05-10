@@ -19,7 +19,13 @@ wflow <- workflow() |>
     build_model_spec()
   )
 
+features <- wflow |> 
+  extract_preprocessor() |> 
+  prep(mlb_train) |> 
+  bake(new_data = NULL) |> 
+  names()
+
 j <- evaluate_model(wflow) 
 cat("j_index:", round(j, 6), "\n")
-log_result(description, j)
+log_result(description, j, features)
 

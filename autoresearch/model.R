@@ -49,13 +49,60 @@ build_recipe <- function(training_data) {
       aa_aaa_k_delta = k_percent_aaa - k_percent_aa,
       aa_aaa_age_delta = min_age_aaa - min_age_aa,
       aa_aaa_pa_delta = pa_aaa - pa_aa,
-      aa_aaa_ops_delta = ops_aaa - ops_aa
+      aa_aaa_ops_delta = ops_aaa - ops_aa,
+      log_iso_aa = log1p(pmax(iso_aa, 0)),
+      log_iso_aaa = log1p(pmax(iso_aaa, 0)),
+      log_hr_aa = log1p(hr_aa),
+      log_hr_aaa = log1p(hr_aaa),
+      log_fb_aa = log1p(pmax(fb_percent_aa, 0)),
+      log_fb_aaa = log1p(pmax(fb_percent_aaa, 0)),
+      la_ha_iso_delta = iso_ha - iso_la,
+      la_ha_hr_fb_delta = hr_fb_ha - hr_fb_la,
+      la_ha_fb_delta = fb_percent_ha - fb_percent_la,
+      la_ha_power_shape_delta = (iso_ha * fb_percent_ha) - (iso_la * fb_percent_la),
+      la_ha_bb_minus_k_delta = (bb_percent_ha - k_percent_ha) - (bb_percent_la - k_percent_la),
+      la_ha_wrc_delta = w_rc_ha - w_rc_la,
+      la_ha_ops_delta = ops_ha - ops_la,
+      la_ha_wrc_per_age_delta = (w_rc_ha / min_age_ha) - (w_rc_la / min_age_la),
+      r_la_iso_delta = iso_la - iso_r,
+      r_la_hr_fb_delta = hr_fb_la - hr_fb_r,
+      r_la_fb_delta = fb_percent_la - fb_percent_r,
+      r_la_power_shape_delta = (iso_la * fb_percent_la) - (iso_r * fb_percent_r),
+      r_la_bb_minus_k_delta = (bb_percent_la - k_percent_la) - (bb_percent_r - k_percent_r),
+      r_la_wrc_delta = w_rc_la - w_rc_r,
+      r_la_ops_delta = ops_la - ops_r,
+      r_la_wrc_per_age_delta = (w_rc_la / min_age_la) - (w_rc_r / min_age_r),
+      ha_aa_iso_delta = iso_aa - iso_ha,
+      ha_aa_hr_fb_delta = hr_fb_aa - hr_fb_ha,
+      ha_aa_fb_delta = fb_percent_aa - fb_percent_ha,
+      ha_aa_power_shape_delta = (iso_aa * fb_percent_aa) - (iso_ha * fb_percent_ha),
+      ha_aa_bb_minus_k_delta = (bb_percent_aa - k_percent_aa) - (bb_percent_ha - k_percent_ha),
+      ha_aa_wrc_delta = w_rc_aa - w_rc_ha,
+      ha_aa_ops_delta = ops_aa - ops_ha,
+      ha_aa_wrc_per_age_delta = (w_rc_aa / min_age_aa) - (w_rc_ha / min_age_ha),
+      upper_def_inn = coalesce(inn_c_aa, 0) + coalesce(inn_c_aaa, 0) + coalesce(inn_ss_aa, 0) + coalesce(inn_ss_aaa, 0) + coalesce(inn_cf_aa, 0) + coalesce(inn_cf_aaa, 0) + coalesce(inn_2b_aa, 0) + coalesce(inn_2b_aaa, 0) + coalesce(inn_3b_aa, 0) + coalesce(inn_3b_aaa, 0) + coalesce(inn_rf_aa, 0) + coalesce(inn_rf_aaa, 0) + coalesce(inn_lf_aa, 0) + coalesce(inn_lf_aaa, 0) + coalesce(inn_1b_aa, 0) + coalesce(inn_1b_aaa, 0),
+      upper_premium_inn = coalesce(inn_c_aa, 0) + coalesce(inn_c_aaa, 0) + coalesce(inn_ss_aa, 0) + coalesce(inn_ss_aaa, 0) + coalesce(inn_cf_aa, 0) + coalesce(inn_cf_aaa, 0),
+      upper_corner_inn = coalesce(inn_1b_aa, 0) + coalesce(inn_1b_aaa, 0) + coalesce(inn_lf_aa, 0) + coalesce(inn_lf_aaa, 0) + coalesce(inn_rf_aa, 0) + coalesce(inn_rf_aaa, 0),
+      upper_infield_inn = coalesce(inn_2b_aa, 0) + coalesce(inn_2b_aaa, 0) + coalesce(inn_3b_aa, 0) + coalesce(inn_3b_aaa, 0) + coalesce(inn_ss_aa, 0) + coalesce(inn_ss_aaa, 0),
+      upper_outfield_inn = coalesce(inn_lf_aa, 0) + coalesce(inn_lf_aaa, 0) + coalesce(inn_cf_aa, 0) + coalesce(inn_cf_aaa, 0) + coalesce(inn_rf_aa, 0) + coalesce(inn_rf_aaa, 0),
+      upper_premium_share = upper_premium_inn / (upper_def_inn + 1),
+      upper_corner_share = upper_corner_inn / (upper_def_inn + 1),
+      upper_infield_share = upper_infield_inn / (upper_def_inn + 1),
+      upper_outfield_share = upper_outfield_inn / (upper_def_inn + 1),
+      upper_spectrum_score = (2.5 * (coalesce(inn_c_aa, 0) + coalesce(inn_c_aaa, 0)) + 2.0 * (coalesce(inn_ss_aa, 0) + coalesce(inn_ss_aaa, 0)) + 1.2 * (coalesce(inn_cf_aa, 0) + coalesce(inn_cf_aaa, 0)) + 0.8 * (coalesce(inn_2b_aa, 0) + coalesce(inn_2b_aaa, 0) + coalesce(inn_3b_aa, 0) + coalesce(inn_3b_aaa, 0)) - 0.4 * (coalesce(inn_lf_aa, 0) + coalesce(inn_lf_aaa, 0) + coalesce(inn_rf_aa, 0) + coalesce(inn_rf_aaa, 0)) - 1.0 * (coalesce(inn_1b_aa, 0) + coalesce(inn_1b_aaa, 0))) / (upper_def_inn + 1),
+      upper_chances = coalesce(putouts_c_aa, 0) + coalesce(putouts_c_aaa, 0) + coalesce(putouts_ss_aa, 0) + coalesce(putouts_ss_aaa, 0) + coalesce(putouts_cf_aa, 0) + coalesce(putouts_cf_aaa, 0) + coalesce(putouts_2b_aa, 0) + coalesce(putouts_2b_aaa, 0) + coalesce(putouts_3b_aa, 0) + coalesce(putouts_3b_aaa, 0) + coalesce(putouts_rf_aa, 0) + coalesce(putouts_rf_aaa, 0) + coalesce(putouts_lf_aa, 0) + coalesce(putouts_lf_aaa, 0) + coalesce(putouts_1b_aa, 0) + coalesce(putouts_1b_aaa, 0) + coalesce(assists_c_aa, 0) + coalesce(assists_c_aaa, 0) + coalesce(assists_ss_aa, 0) + coalesce(assists_ss_aaa, 0) + coalesce(assists_cf_aa, 0) + coalesce(assists_cf_aaa, 0) + coalesce(assists_2b_aa, 0) + coalesce(assists_2b_aaa, 0) + coalesce(assists_3b_aa, 0) + coalesce(assists_3b_aaa, 0) + coalesce(assists_rf_aa, 0) + coalesce(assists_rf_aaa, 0) + coalesce(assists_lf_aa, 0) + coalesce(assists_lf_aaa, 0) + coalesce(assists_1b_aa, 0) + coalesce(assists_1b_aaa, 0),
+      upper_range_factor_9 = 9 * upper_chances / (upper_def_inn + 1),
+      upper_power_spectrum = upper_minors_power_shape * upper_spectrum_score,
+      upper_control_spectrum = upper_minors_bb_minus_k * upper_spectrum_score,
+      upper_wrc_premium = upper_minors_wrc * upper_premium_share,
+      upper_power_corner = upper_minors_power_shape * upper_corner_share
     ) |> 
+    step_rm(matches("^(inn|putouts|assists)_")) |> 
     step_indicate_na(all_predictors()) |> 
-    step_impute_median(all_predictors()) |>
-    step_normalize(all_numeric_predictors()) |> 
+    step_impute_median(all_predictors()) |> 
     step_zv(all_predictors()) |> 
-    step_downsample(success)
+    step_normalize(all_numeric_predictors()) |> 
+    step_smote(success)
 }
 
 build_model_spec <- function() {
