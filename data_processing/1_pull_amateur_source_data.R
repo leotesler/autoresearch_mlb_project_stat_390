@@ -92,8 +92,7 @@ mlb_full <- mlb_full |>
     is.na(amateur_type) & birth_country %in% c("USA", "Canada", "Puerto Rico") ~ "unknown",
     is.na(amateur_type) & !(birth_country %in% c("USA", "Canada", "Puerto Rico")) ~ "international"
   )) |> 
-  select(!birth_country) |> 
-  colnames()
+  select(!birth_country)
 
 # save data ----
 save(mlb_full, file = "clean_data/mlb_full.rds")
