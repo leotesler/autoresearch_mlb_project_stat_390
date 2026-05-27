@@ -33,7 +33,7 @@ mlb_clean <- mlb_full |>
   select(!starts_with("max_age")) |> 
   mutate(across(starts_with("min_age"), ~as.numeric(.x)),
          success = factor(success, levels = c("No", "Yes")),
-         debut_age = pmin(min_age_r, min_age_la, min_age_ha, min_age_aa, min_age_aaa, na.rm = TRUE)) |> 
+         debut_age = pmin(min_age_r, min_age_la, min_age_ha, min_age_aa, min_age_aaa)) |> 
   select(!c("n_seasons", "tot_games", "tot_war", "avg_war", "median_war", "war_162"))
 
 # train-test split ----

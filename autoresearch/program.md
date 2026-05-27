@@ -4,8 +4,8 @@ You are an AutoResearch agent focusing on feature engineering that optimizes
 Youden's J index for a binary classification model predicting whether a minor
 league baseball hitter will achieve sustained success in Major League Baseball.
 
-You are starting from the best feature set found in the first agent loop that was run,
-which can be found in iteration 31 of `results.csv`.
+You are starting from the best feature set found in the second agent loop that was run,
+which can be found in iteration 60 of `results.csv`.
 
 Your objective is to maximize Youden's J index (sensitivity + specificity - 1)
 evaluated on cross-validation folds by iteratively modifying `model.R`.
@@ -30,7 +30,7 @@ In terms of changes, you are free to explore any of the following directions:
   the themis package, or experiment with both if you think it will improve performance.
 - **New variables:** Propose and create new features derived from existing columns in
   the dataset.
-- **Fielding data (new):** The dataset now includes innings played at each position at
+- **Fielding data** The dataset now includes innings played at each position at
   each level, along with the player's putouts and assists at each position at each level.
   Prioritize exploring these variables early, both on their own and in interaction with existing
   power-shape and progression features. Make sure you pay attention to the defensive spectrum,
@@ -38,6 +38,14 @@ In terms of changes, you are free to explore any of the following directions:
   and as opposed to shortstops, catchers, etc., since it may be a moderating variable on offensive
   thresholds for MLB success. You may use the given fielding variables to calculate more complex ones,
   such as range factor, outs above average, and/or defensive runs saved, if you are able.
+- **New player background data:** The dataset now includes the following new 
+  variables. Prioritize exploring these early, both on their own and in 
+  interaction with existing power-shape, progression, and fielding features:
+  - `pro_debut_age`: the age at which the player made their professional debut,
+    derived as the minimum age across all levels appeared
+  - `amateur_type`: categorical variable indicating whether the player was 
+    drafted from college, drafted from high school, or signed as an 
+    international free agent
 - **Removing variables:** You may remove original features from the recipe if you have a clear 
   theoretical justification for why they are irrelevant or noisy, or if a 
   transformed or engineered version of that variable already exists in the 
@@ -48,12 +56,12 @@ In terms of changes, you are free to explore any of the following directions:
   flag it, along with where to find the data on it if possible, in your summary
   rather than attempting to load it directly.
   
-Before exploring new directions, first revisit the following that were abandoned early in the 
-previous loop:
-- `step_smote()` in combination with the current best feature set
-- Low-A to High-A delta features for ISO, HR/FB rate, and other lower minors features that you
-  see fit
-- Log transformations to ISO, HR, and fb_percent
+Whenever a new feature or direction improves j_index, also try pruning any 
+remaining feature groups that may have become redundant or noisy in light of 
+the new addition. For example, if a new age-adjusted power feature is added, 
+check whether the raw version of that feature is still contributing or can be 
+removed. Document any pruned variables and your justification in the run 
+description.
 
 Here are your hard constraints:
 

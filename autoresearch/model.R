@@ -97,6 +97,8 @@ build_recipe <- function(training_data) {
       upper_wrc_premium = upper_minors_wrc * upper_premium_share,
       upper_power_corner = upper_minors_power_shape * upper_corner_share
     ) |> 
+    step_rm(matches("^upper_minors_")) |> 
+    step_rm(debut_age, amateur_type) |> 
     step_rm(matches("^(inn|putouts|assists)_")) |> 
     step_indicate_na(all_predictors()) |> 
     step_impute_median(all_predictors()) |> 
