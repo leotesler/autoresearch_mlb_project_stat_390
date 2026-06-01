@@ -5,6 +5,12 @@ output: html_document
 
 What's in this repo?
 
+Quick access:
+
+Experiment log can be found at `autoresearch/results.csv`.
+
+Final report can be found at `reports/STAT_390_Capstone_Project_Final_Report.pdf`.
+
 Subdirectories:
 
 `autoresearch/`: Files used to train the AI agent, and process loop results.
